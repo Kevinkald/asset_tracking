@@ -131,6 +131,7 @@ dmypy.json
 *.jpg
 *.JPEG
 
+
 exported-models/*
 
 images/*
