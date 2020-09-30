@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+*.jpg
+*.JPEG
+
+exported-models/*
+
+images/*
+
+models/my_ssd_resnet50_v1_fpn/*
+
+pre-trained-models/*
+
