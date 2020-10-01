@@ -9,9 +9,16 @@ gpus = tf.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
+
+SAVE_VIDEO = False
+
 # Load image paths
 #VIDEO_PATH = "../../../Data/scenario_1/MOV_0012.MP4"
-VIDEO_PATH = "../../../Data/scenario_2/MOV_0020.MP4"
+VIDEO_PATH = "../../../Data/scenario_1/MOV_0022.MP4"
+frame = 3200
+#VIDEO_PATH = "../../../Data/scenario_2/MOV_0020.MP4"
+#frame = 3800
+
 # Path to trained model
 PATH_TO_MODEL_DIR = "exported-models/my_ssd_resnet50_v1_fpn/"
 
@@ -48,8 +55,14 @@ import cv2
 import apriltag
 
 cap = cv2.VideoCapture(VIDEO_PATH)
-frame = 3800
 cap.set(cv2.CAP_PROP_POS_FRAMES, frame-1)
+
+# define 
+if SAVE_VIDEO:
+	frame_width = int(cap.get(3))
+	frame_height = int(cap.get(4))
+	out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+
 
 
 count = frame
@@ -61,14 +74,20 @@ while(cap.isOpened()):
 	
 	gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	detector = apriltag.Detector()
-	result = detector.detect(gray_frame)
-	NR_DETECTIONS = len(result)
+	detections = detector.detect(gray_frame)
+	
+	NR_DETECTIONS = len(detections)
 	print("# detected fiducials", NR_DETECTIONS)
 	for i in range(NR_DETECTIONS):
+		# Get and draw pose of fiducial
+		# fx, fy, cx, cy
+		K = [929.7, 932.749, 616.4179214005839, 335.4107412307333]
+		pose, _, _ = detector.detection_pose(detections[0], K , tag_size=1, z_sign=1 )
+		apriltag._draw_pose(frame, K, 1, pose, z_sign=1)
 	# We want to draw four lines
 		for j in range(4):
-			start_point = tuple(result[i].corners[j-1, :].astype(int))
-			end_point = tuple(result[i].corners[j, :].astype(int))
+			start_point = tuple(detections[i].corners[j-1, :].astype(int))
+			end_point = tuple(detections[i].corners[j, :].astype(int))
 			cv2.line(frame, start_point,
 				end_point, (255, 0, 0),
 				thickness=3)
@@ -112,6 +131,9 @@ while(cap.isOpened()):
 		break
 
 	count = count + 1
+	if SAVE_VIDEO:
+		out.write(image_np_with_detections)
+
 
 
 
