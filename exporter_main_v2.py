@@ -92,6 +92,11 @@ If side inputs are desired, the following arguments could be appended
    --side_input_names context_features,valid_context_size \
    --side_input_types tf.float32,tf.int32
 """
+
+# python exporter_main_v2.py --input_type image_tensor --pipeline_config_path models/my_efficientdet_d1_coco17_tpu-32/pipeline.config --trained_checkpoint_dir models/my_efficientdet_d1_coco17_tpu-32/ --output_directory exported-models/my_efficientdet_d1
+
+
+
 from absl import app
 from absl import flags
 
