@@ -23,7 +23,7 @@ frame = 3200
 
 # Path to trained model
 #PATH_TO_MODEL_DIR = "exported-models/my_ssd_resnet50_v1_fpn/"
-PATH_TO_MODEL_DIR = "exported-models/my_efficientdet_d1/"
+PATH_TO_MODEL_DIR = "exported-models/my_efficientdet_d1_contrast/"
 
 # Label
 PATH_TO_LABELS = "annotations/label_map.pbtxt"

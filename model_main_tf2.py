@@ -108,7 +108,7 @@ def main(unused_argv):
           use_tpu=FLAGS.use_tpu,
           checkpoint_every_n=FLAGS.checkpoint_every_n,
           record_summaries=FLAGS.record_summaries,
-          checkpoint_max_to_keep=20)
+          checkpoint_max_to_keep=100)
 
 if __name__ == '__main__':
   tf.compat.v1.app.run()
