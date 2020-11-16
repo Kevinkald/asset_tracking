@@ -1,14 +1,18 @@
 import numpy as np
 import imgaug as ia
 import imgaug.augmenters as iaa
+import imgaug.random as iarandom
 import cv2
 import os
 import xml.etree.ElementTree as ET
 
 folder="../images/train_copy/"
-
+rng = iarandom.RNG(1234)
+rng.integers(1,5)
 seq = iaa.Sequential([
-	iaa.FastSnowyLandscape(lightness_threshold=(150,200), lightness_multiplier=(1.0, 4.0))
+
+
+	iaa.imgcorruptlike.Brightness(seed=rng)
 ])
 
 for filename in os.listdir(folder):
@@ -43,7 +47,3 @@ for filename in os.listdir(folder):
     	# save augmented image + edited xml file
         cv2.imwrite(new_filename, image_aug)
         tree.write(xml_filename)
-    	
-
-
-

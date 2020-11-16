@@ -5,10 +5,10 @@ import cv2
 import os
 import xml.etree.ElementTree as ET
 
-folder="../images/train_cutout/"
+folder="../images/train_copy/"
 
 seq = iaa.Sequential([
-	iaa.Cutout(nb_iterations=(1,4), size=0.2, squared=False)
+	iaa.Cutout(nb_iterations=(1,6), size=0.25, squared=False)
 ])
 
 for filename in os.listdir(folder):
