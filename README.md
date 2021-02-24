@@ -1,17 +1,40 @@
 # asset_tracking
 
-Partition data set: python partition_dataset.py -x -i [PATH_TO_IMAGES_FOLDER] -o [PATH_TO_PARTITIONED_IMAGE_FOLDER] -r 0.1
+## Partition data set: 
 
-calibrate.py: ./calibrate.py ../../../Data/calibration/MOV_0007_calibration.mp4 MOV_0007.yaml --debug-dir out -fs 20 --debug-dir ~/Downloads/debug/
+This script randomly divides the labeled data(.jpg + corresponding .xml) in to 90% train and 10% eval data. 0.1 can be adjusted accordingly to different threshold. 
 
-
-generate_tfrecord.py: python generate_tfrecord.py -x ../workspace/container_detection/images/test -l ../workspace/container_detection/annotations/label_map.pbtxt -o ../workspace/container_detection/annotations/test.record
-
-python model_main_tf2.py --model_dir=models/my_ssd_resnet50_v1_fpn --pipeline_config_path=models/my_ssd_resnet50_v1_fpn/pipeline.config --checkpoint_dir=models/my_ssd_resnet50_v1_fpn
+```python partition_dataset.py -x -i [PATH_TO_IMAGES_FOLDER] -o [PATH_TO_PARTITIONED_IMAGE_FOLDER] -r 0.1```
 
 
-run eval on exported model
+## Calibrating camera using video:
 
-python model_main_tf2.py --model_dir=exported-models/my_efficientdet_d1_cutout_rscps_contrast --pipeline_config_path=exported-models/my_efficientdet_d1_cutout_rscps_contrast/pipeline.config --checkpoint_dir=exported-models/my_efficientdet_d1_cutout_rscps_contrast/checkpoint
 
-export CUDA_VISIBLE_DEVICES='' to run eval in terminal only on CPU
+```calibrate.py: ./calibrate.py [PATH_TO_VIDEO] [OUTPUT_FILE_NAME].yaml --debug-dir out -fs 20 --debug-dir ~/Downloads/debug/```
+
+
+## Generate tfrecord:
+
+This converts .xml to .record format which is required for using TensorFlow 2 object detection API. Needs to be done for both training- and evaluation data set.
+
+```generate_tfrecord.py: python generate_tfrecord.py -x [PATH_TO_TRAIN_OR_EVAL_IMAGES] -l [PATH_TO_LABEL_MAP]/label_map.pbtxt -o [PATH_TO_OUTPUT_TFRECORD_FILE]/test.record```
+
+
+## Train a model:
+
+```python train_model.py --model_dir=[PATH_TO_PRETRAINED_MODEL_TO_TRAIN] --pipeline_config_path=[PATH_TO_PIPELINE_CONFIG]pipeline.config```
+
+
+## Run evaluation on a model:
+
+Add the --checkpoint_dir attribute. NB!: set export CUDA_VISIBLE_DEVICES='' in the validation terminal to not interfere with the GPU.
+
+```python train_model.py --model_dir=[PATH_TO_PRETRAINED_MODEL_TO_TRAIN] --pipeline_config_path=[PATH_TO_PIPELINE_CONFIG]pipeline.config --checkpoint_dir=[PATH_TO_CHECKPOINT_DIR]```
+
+## Run evalulation on an exported model
+
+python train_model.py --model_dir=[PATH_TO_EXPORTED_MODEL] --pipeline_config_path=[PATH_TO_PIPELINE_CONFIG]/pipeline.config --checkpoint_dir=[PATH_TO_MODEL_CHECKPOINT]/checkpoint
+
+## Monitor evaluation using tensorboard
+
+```tensorboard --logdir=[PATH_TO_TRAINING_MODEL_DIR]```
