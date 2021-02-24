@@ -5,7 +5,7 @@ import cv2
 import os
 import xml.etree.ElementTree as ET
 
-folder="../images/train_copy/"
+folder="/home/kevin/projects/cognite/TensorFlow/images/train/"
 
 seq = iaa.Sequential([
 	iaa.Cutout(nb_iterations=(1,6), size=0.25, squared=False)
