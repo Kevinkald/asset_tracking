@@ -30,8 +30,10 @@ python model_main_tf2.py -- \
 from absl import flags
 import tensorflow.compat.v2 as tf
 from object_detection import model_lib_v2
+import os
 
 # These 3 lines fix error with CUBLAS_STATUS_NOT_INITIALIZED
+# Also allow max usage of GPU
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
@@ -82,6 +84,8 @@ def main(unused_argv):
   tf.config.set_soft_device_placement(True)
 
   if FLAGS.checkpoint_dir:
+    # Run evaluation on CPU only
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
     model_lib_v2.eval_continuously(
         pipeline_config_path=FLAGS.pipeline_config_path,
         model_dir=FLAGS.model_dir,

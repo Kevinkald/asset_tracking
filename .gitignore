@@ -137,7 +137,9 @@ exported-models/*
 
 images/*
 
-models/*
-
 pre-trained-models/*
 
+models/efficientdet_d1/train/*
+models/efficientdet_d1/eval/*
+checkpoint
+ckpt*
