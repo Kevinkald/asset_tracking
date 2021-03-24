@@ -84,8 +84,6 @@ def main(unused_argv):
   tf.config.set_soft_device_placement(True)
 
   if FLAGS.checkpoint_dir:
-    # Run evaluation on CPU only
-    os.environ["CUDA_VISIBLE_DEVICES"] = ""
     model_lib_v2.eval_continuously(
         pipeline_config_path=FLAGS.pipeline_config_path,
         model_dir=FLAGS.model_dir,
